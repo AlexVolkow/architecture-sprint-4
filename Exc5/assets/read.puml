@@ -1,0 +1,19 @@
+@startuml
+actor       Оператор       as oper
+collections MES as mes
+collections "MES API" as mesapi
+database    Redis    as cache
+database    "MES DB"    as db
+
+oper -> mes : "Получить список заказов в статусе A"
+mes -> mesapi : "Получить список заказов в статусе A"
+mesapi -> cache : "Получить список заказов из кеша. Ключ = A"
+cache -> mesapi : "Нашли актуальный список в кеше"
+mesapi -> mes : "Вернуть список клиенту"
+mes -> oper : "Вернуть список клиенту"
+cache -> db : "Загрузить в кеш список заказов в статусе A"
+
+cache ->> db : "Обновить список в кеше"
+note left: Раз в 15 минут
+
+@enduml
