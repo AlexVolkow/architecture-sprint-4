@@ -1,0 +1,17 @@
+@startuml
+actor       Оператор       as oper
+collections MES as mes
+collections "MES API" as mesapi
+database    Redis    as cache
+database    "MES DB"    as db
+
+oper -> mes : "Изменить статус заказа c идентификатором X с A на B"
+mes -> mesapi : "Изменить статус заказа c идентификатором X с A на B"
+mesapi -> db: "Изменить статус заказа c идентификатором X с A на B"
+mesapi -> cache: "Изменить статус заказа в кеше c идентификатором X с A на B"
+mesapi -> cache: "Добавить заказ X в начало списка B. Ключ = B" 
+mesapi -> cache: "Удалить заказ X из списка A. Ключ = A" 
+mesapi -> mes: "Вернуть 200 OK"
+mes -> oper: "Вернуть 200 OK"
+
+@enduml
